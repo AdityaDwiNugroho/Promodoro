@@ -1,8 +1,14 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, screen} = require('electron')
 
 var mainWindow
 
 function createWindow () {
+  const display = screen.getPrimaryDisplay()
+  const { width, height } = display.workAreaSize
+
+  const winWidth = 300
+  const winHeight = 40
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 300,
@@ -10,16 +16,21 @@ function createWindow () {
     transparent: true,
     frame:false,
     resizable: false,
-    x: 1620,
-    y: 993,
+    x: width - winWidth,
+    y: height - winHeight,
     skipTaskbar: true,
+    focusable: false
   })
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/template/index.html`)
+  mainWindow.setAlwaysOnTop(true, 'screen-saver');
+  mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
+  mainWindow.setFullScreenable(false);
+
 
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
